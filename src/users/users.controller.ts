@@ -9,10 +9,13 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { Serialize } from 'src/interceptors/serialize.Interceptor';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
 
+@Serialize(UserDto) //ignore some fields with interceptor
 @Controller('auth')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -41,7 +44,7 @@ export class UsersController {
     return this.usersService.remove(parseInt(id));
   }
 
-  @Patch('/: id')
+  @Patch('/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.usersService.update(parseInt(id), body);
   }
