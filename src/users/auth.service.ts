@@ -13,7 +13,7 @@ const scrypt = promisify(_scrypt);
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async singup(email: string, password: string) {
+  async signup(email: string, password: string) {
     const users = await this.usersService.find(email);
     if (users?.length > 0) {
       throw new BadRequestException('Email is already in use.');
