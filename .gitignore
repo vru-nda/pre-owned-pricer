@@ -1,7 +1,12 @@
+# Env files
+.env.development
+.env.test
+
 # compiled output
 /dist
 /node_modules
 db.sqlite
+test.sqlite
 
 # Logs
 logs

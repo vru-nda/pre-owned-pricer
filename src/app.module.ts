@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common/pipes';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 const cookieSession = require('cookie-session');
@@ -15,13 +16,29 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    // Sqlite setup
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
-      entities: [User, Report],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    // Sqlite setup with env config
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Report],
+          synchronize: true,
+        };
+      },
+    }),
+    // Sqlite setup without env
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'db.sqlite',
+    //   entities: [User, Report],
+    //   synchronize: true,
+    // }),
     ReportsModule,
     UsersModule,
   ],
@@ -40,10 +57,12 @@ import { UsersModule } from './users/users.module';
 export class AppModule {
   // Middlware setup for routes
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(
-      cookieSession({
-        keys: ['awrfwew'],
-      }),
-    ).forRoutes("*");
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['awrfwew'],
+        }),
+      )
+      .forRoutes('*');
   }
 }
