@@ -32,7 +32,7 @@ export class AuthService {
     const [user] = await this.usersService.find(email);
 
     if (!user) {
-      throw new NotFoundException('Invalid Email or Password.');
+      throw new BadRequestException('Invalid Email or Password.');
     }
 
     const [salt, storedHash] = user.password.split('.');

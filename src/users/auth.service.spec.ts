@@ -10,10 +10,22 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     // create a fake copy of usersService
+    const users: User[] = [];
+
     fakeUsersService = {
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = {
+          id: Math.floor(Math.random() * 999999),
+          email,
+          password,
+        } as User;
+        users.push(user);
+        return Promise.resolve(user);
+      },
     };
 
     const module = await Test.createTestingModule({
@@ -42,14 +54,32 @@ describe('AuthService', () => {
     expect(hashed).toBeDefined();
   });
 
-  it('throws an error if user signs up with an email that is in use', async () => {
-    fakeUsersService.find = () =>
-      Promise.resolve([
-        { id: 1, email: 'test@test.com', password: 'test' } as User,
-      ]);
+  it('throws an error if user signs up with an email that is already in use', async () => {
+    await service.signup('test@test.com', 'test')
+
     // done and async await doesn't work together with the latest version
     await expect(service.signup('test@test.com', 'test')).rejects.toThrow(
       BadRequestException,
     );
+  });
+
+  // ********* Signin ************//
+  it('throws an error if signin is called with an unused email', async () => {
+    await expect(service.signin('wewe@jvf.com', 'ewewe')).rejects.toThrow(
+      BadRequestException,
+    );
+  });
+
+  it('throws an error if an invalid password is provided', async () => {
+    await service.signup('test@test.com', 'test')
+    await expect(service.signin('test@test.com', 'jhvh')).rejects.toThrow(
+      BadRequestException,
+    );
+  });
+
+  it('returns a user if correct password is provided', async () => {
+    await service.signup('admin', 'mypassword')
+    const user = await service.signin('admin', 'mypassword');
+    expect(user).toBeDefined();
   });
 });
