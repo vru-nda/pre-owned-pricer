@@ -55,12 +55,14 @@ import { UsersModule } from './users/users.module';
   ],
 })
 export class AppModule {
+  constructor(private configService:ConfigService){}
+
   // Middlware setup for routes
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
         cookieSession({
-          keys: ['awrfwew'],
+          keys: [this.configService.get<string>('COOKIE_KEY')],
         }),
       )
       .forRoutes('*');
