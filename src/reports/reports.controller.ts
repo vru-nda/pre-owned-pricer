@@ -33,7 +33,7 @@ export class ReportsController {
   @Get()
   @UseGuards(AuthGuard)
   getEstimate(@Query() query: GetEstimateDto) {
-    console.log('getEstimate called', query);
+   return this.reportsService.createEstimate(query)
   }
 
   @Patch('/:id')
