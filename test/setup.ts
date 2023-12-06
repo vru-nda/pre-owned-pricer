@@ -7,7 +7,7 @@ global.beforeEach(async () => {
   } catch (error) {}
 });
 
-// needs to be fixed
+// Close connection after each test using the new methods
 // global.afterEach(async () => {
 //   const connection = getConnection();
 //   await connection.close();
