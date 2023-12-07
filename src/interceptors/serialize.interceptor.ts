@@ -4,7 +4,7 @@ import {
   NestInterceptor,
   UseInterceptors,
 } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -30,7 +30,7 @@ export class SerializerInterceptor implements NestInterceptor {
       map((data: any) => {
         // Run something before the response is sent out
         // plainToClass is deprected
-        return plainToInstance(this.dto, data, {
+        return plainToClass(this.dto, data, {
           excludeExtraneousValues: true,
         });
       }),

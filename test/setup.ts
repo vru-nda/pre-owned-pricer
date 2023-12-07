@@ -1,5 +1,6 @@
 import { rm } from 'fs/promises';
 import { join } from 'path';
+import { getConnection } from 'typeorm';
 
 global.beforeEach(async () => {
   try {
@@ -8,7 +9,7 @@ global.beforeEach(async () => {
 });
 
 // Close connection after each test using the new methods
-// global.afterEach(async () => {
-//   const connection = getConnection();
-//   await connection.close();
-// });
+global.afterEach(async () => {
+  const connection = getConnection()
+  await connection.close()
+});

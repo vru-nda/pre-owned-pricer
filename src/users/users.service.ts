@@ -15,15 +15,15 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    if(!id){
-      throw new NotFoundException("User is not logged in.");
+    if (!id) {
+      throw new NotFoundException('User is not logged in.');
     }
     return this.repo.findOne({ where: { id } });
   }
 
   // find also needs where condition
   find(email: string) {
-    return this.repo.findBy({ email });
+    return this.repo.find({ where: { email } });
   }
 
   async update(id: number, attrs: Partial<User>) {

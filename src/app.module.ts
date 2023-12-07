@@ -8,9 +8,6 @@ const cookieSession = require('cookie-session');
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { Report } from './reports/report.entity';
-import { User } from './users/user.entity';
-
 import { ReportsModule } from './reports/reports.module';
 import { UsersModule } from './users/users.module';
 
@@ -21,24 +18,7 @@ import { UsersModule } from './users/users.module';
       envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     // Sqlite setup with env config
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
-          synchronize: true,
-        };
-      },
-    }),
-    // Sqlite setup without env
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite',
-    //   database: 'db.sqlite',
-    //   entities: [User, Report],
-    //   synchronize: true,
-    // }),
+    TypeOrmModule.forRoot(),
     ReportsModule,
     UsersModule,
   ],
@@ -55,7 +35,7 @@ import { UsersModule } from './users/users.module';
   ],
 })
 export class AppModule {
-  constructor(private configService:ConfigService){}
+  constructor(private configService: ConfigService) {}
 
   // Middlware setup for routes
   configure(consumer: MiddlewareConsumer) {
