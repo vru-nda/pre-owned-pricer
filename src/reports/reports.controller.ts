@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AdminGuard } from '../guards/admin.guard';
 import { AuthGuard } from '../guards/auth.guard';
-import { Serialize } from '../interceptors/serialize.Interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from '../users/user.entity';
 import { ApproveReportDto } from './dtos/approve-report.dto';
