@@ -32,7 +32,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found!');
     }
-    Object.assign(user, attrs);
+    user.email = attrs.email;
     return this.repo.save(user);
   }
 
