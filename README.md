@@ -56,6 +56,12 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+
+# Generate migrations
+$ npm run typeorm migration:generate -- -n initial-schema -o
+
+# Run the migrations
+$ npm run typeorm  migration:run -- -d data.source.ts
 ```
 
 ## Support
